@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="flight" format="json">
+      <types:shape format="weave" example="examples/flight-example.json"><![CDATA[%dw 2.0
+
+type flight = {|
+  ID: Number {"typeId": "int"}, 
+  code: String, 
+  price: Number {"typeId": "int"}, 
+  departureDate: String, 
+  origin: String, 
+  destination: String, 
+  emptySeats: Number {"typeId": "int"}, 
+  plane: {|
+    "type": String, 
+    totalSeats: Number {"typeId": "int"}
+  |}
+|} {"example": "{\\\"ID\\\":1,\\\"code\\\":\\\"ER38sd\\\",\\\"price\\\":400,\\\"departureDate\\\":\\\"2017\\/07\\/26\\\",\\\"origin\\\":\\\"CLE\\\",\\\"destination\\\":\\\"SFO\\\",\\\"emptySeats\\\":0,\\\"plane\\\":{\\\"type\\\":\\\"Boeing 737\\\",\\\"totalSeats\\\":150}}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="flight-no-id" format="json">
+      <types:shape format="weave" example="examples/flight-no-id-example.json"><![CDATA[%dw 2.0
+
+type flight_no_id = {|
+  code: String, 
+  price: Number {"typeId": "int"}, 
+  departureDate: String, 
+  origin: String, 
+  destination: String, 
+  emptySeats: Number {"typeId": "int"}, 
+  plane: {|
+    "type": String, 
+    totalSeats: Number {"typeId": "int"}
+  |}
+|} {"example": "{\\\"code\\\":\\\"ER38sd\\\",\\\"price\\\":400,\\\"departureDate\\\":\\\"2017\\/07\\/26\\\",\\\"origin\\\":\\\"CLE\\\",\\\"destination\\\":\\\"SFO\\\",\\\"emptySeats\\\":0,\\\"plane\\\":{\\\"type\\\":\\\"Boeing 737\\\",\\\"totalSeats\\\":150}}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="flight-database-no-id" format="json">
+      <types:shape format="weave" example="examples/flights-database-no-id-example.json"><![CDATA[%dw 2.0
+
+type flight_database_no_id = {|
+  code: String, 
+  price: Number {"typeId": "int"}, 
+  departureDate: String, 
+  origin: String, 
+  destination: String, 
+  emptySeats: Number {"typeId": "int"}, 
+  planeType: String, 
+  totalSeats: Number {"typeId": "int"}
+|} {"example": "{\\\"code\\\":\\\"ER38sd\\\",\\\"price\\\":400,\\\"departureDate\\\":\\\"2017\\/07\\/26\\\",\\\"origin\\\":\\\"CLE\\\",\\\"destination\\\":\\\"SFO\\\",\\\"emptySeats\\\":0,\\\"planeType\\\":\\\"Boeing 737\\\",\\\"totalSeats\\\":150}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="flight-database" format="json">
+      <types:shape format="weave" example="examples/flight-database-example.json"><![CDATA[%dw 2.0
+
+type flight_database = {|
+  ID: Number {"typeId": "int"}, 
+  code: String, 
+  price: Number {"typeId": "int"}, 
+  departureDate: String, 
+  origin: String, 
+  destination: String, 
+  emptySeats: Number {"typeId": "int"}, 
+  planeType: String, 
+  totalSeats: Number {"typeId": "int"}
+|} {"example": "{\\\"ID\\\":1,\\\"code\\\":\\\"ER38sd\\\",\\\"price\\\":400,\\\"departureDate\\\":\\\"2017\\/07\\/26\\\",\\\"origin\\\":\\\"CLE\\\",\\\"destination\\\":\\\"SFO\\\",\\\"emptySeats\\\":0,\\\"planeType\\\":\\\"Boeing 737\\\",\\\"totalSeats\\\":150}"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#7296d2e8-660c-4cb8-9afb-309d829191e9">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="flight"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#cab0f04e-a0ad-4ad2-afc6-5d843a47bdb7">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="flight-no-id"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="flight-database-no-id"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#60806fad-e3d4-4fd5-9cb9-3f307295e3cf">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="flight-no-id"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:variables>
+          <types:variable name="ID" type="flight-database"/>
+        </types:variables>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

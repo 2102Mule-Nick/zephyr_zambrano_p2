@@ -1,0 +1,10 @@
+{
+	"code": "ER38sd",
+	"price": 400,
+	"departureDate": "2017/07/26",
+	"origin": "CLE",
+	"destination": "SFO",
+	"emptySeats": 0,
+	"planeType": "Boeing 737",
+	"totalSeats": 150
+}

@@ -1,0 +1,28 @@
+# Config
+
+# Port
+http:
+  port: "8081"
+
+# Flights API
+flights:
+  host: ""
+  port: "80"
+  protocol: "HTTP"
+  basepath: "/"
+  client_id: ""
+  client_secret: ""
+
+# Validations
+validation:
+  destination:
+    regex: "^(SFO|LAX|CLE)$"
+    message: "Unknown destination"
+
+# Database
+database:
+  url: "jdbc:postgresql://localhost:5432/flights-database?currentSchema=flights"
+  driver: "org.postgresql.Driver"
+  username: "postgres"
+  password: "postgres"
+

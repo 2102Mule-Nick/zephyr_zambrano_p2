@@ -1,0 +1,97 @@
+#%RAML 1.0
+title: Flights API
+
+types:
+  Flight: !include /data-types/FlightDataType.raml
+
+traits:
+  Identifiable:
+    headers:
+      client_id:
+      client_secret:
+
+/flights:
+  is:
+    - Identifiable
+  get:
+    queryParameters:
+      destination:
+        required: false
+        enum:
+          - SFO
+          - LAX
+          - CLE
+    responses:
+      200:
+        body:
+          application/json:
+            type: Flight[]
+            examples:
+              output: !include /examples/FlightsReturnedArrayExample.raml
+  post:
+    body:
+      application/json:
+        type: Flight
+        examples:
+          input: !include /examples/FlightNoIDExample.raml
+    responses:
+      201:
+        body:
+          application/json:
+            example:
+              message: Flight added
+      400:
+        body:
+          application/json:
+            example:
+              message: Unable to add flight
+  
+  /{ID}:
+    is:
+      - Identifiable
+    uriParameters:
+      ID:
+        type: integer
+        minimum: 1
+    get:
+      responses:
+        200:
+          body:
+            application/json:
+              type: Flight
+              examples:
+                output: !include /examples/FlightExample.raml
+        400:
+          body:
+            application/json:
+              example:
+                message: No flight with that ID; could not get flight
+    put:
+      body:
+        application/json:
+          type: Flight
+          examples: !include /examples/FlightNoIDExample.raml
+      responses:
+        200:
+          body:
+            application/json:
+              example:
+                message: Flight added or updated
+        400:
+          body:
+            application/json:
+              example:
+                message: Unable to add or update flight with that ID
+    delete:
+      responses:
+        200:
+          body:
+            application/json:
+              example:
+                message: Flight deleted
+        400:
+          body:
+            application/json:
+              example:
+                message: No flight with that ID; could not delete flight
+
